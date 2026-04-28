@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crypto Tracker</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            padding: 50px;
+        }
+
+        .box {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            width: 400px;
+            margin: auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            background: #22c55e;
+            color: white;
+            cursor: pointer;
+        }
+
+        h2 {
+            margin-top: 20px;
+            color: #22c55e;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+    <h1>💰 Crypto Tracker</h1>
+
+    <form method="POST">
+        <input name="crypto" placeholder="bitcoin / ethereum">
+        <button>Search</button>
+    </form>
+
+    {% if price %}
+        <h2>{{ crypto }} = ${{ price }}</h2>
+    {% endif %}
+
+    <canvas id="chart" width="400" height="200"></canvas>
+</div>
+
+<script>
+    const prices = {{ history | safe }};
+    
+    if (prices.length > 0) {
+        new Chart(document.getElementById('chart'), {
+            type: 'line',
+            data: {
+                labels: prices.map((_, i) => i),
+                datasets: [{
+                    label: 'Price (USD)',
+                    data: prices,
+                    borderWidth: 2
+                }]
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
